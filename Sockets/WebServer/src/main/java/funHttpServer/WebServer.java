@@ -242,9 +242,7 @@ class WebServer {
           Map<String, String> query_pairs = new LinkedHashMap<String, String>();
           query_pairs = splitQuery(request.replace("github?", ""));
           String json = fetchURL("https://api.github.com/" + query_pairs.get("query"));
-          System.out.println(json);
-
-          builder.append("Check the todos mentioned in the Java source file");
+           
           // TODO: Parse the JSON returned by your fetch and create an appropriate
           // response
           // and list the owner name, owner id and name of the public repo on your webpage, e.g.
@@ -263,8 +261,10 @@ class WebServer {
               
               JSONObject repo = repoArr.getJSONObject(i);
               JSONObject owner = repo.getJSONObject("owner");
+             
+              String out = (owner.getString("login") + ", " + owner.getInt("id") + " -> " + repo.getString("name") + "\n");
               
-              builder.append(owner.getString("login") + ", " + owner.getInt("id") + " -> " + repo.getString("name") + "\n");
+              builder.append(out);
               System.out.println(owner.getString("login") + ", " + owner.getInt("id") + " -> " + repo.getString("name"));
           }
 
