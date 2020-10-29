@@ -264,7 +264,8 @@ class WebServer {
               JSONObject repo = repoArr.getJSONObject(i);
               JSONObject owner = repo.getJSONObject("owner");
               
-              builder.append(owner.getString("login") + ", " + owner.getInt("id") + " -> " + repo.getString("name"));
+              builder.append(owner.getString("login") + ", " + owner.getInt("id") + " -> " + repo.getString("name") + "\n");
+              System.out.println(owner.getString("login") + ", " + owner.getInt("id") + " -> " + repo.getString("name"));
           }
 
         } else {
