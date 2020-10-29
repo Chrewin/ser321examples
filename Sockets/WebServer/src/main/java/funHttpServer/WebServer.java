@@ -25,6 +25,7 @@ import java.util.Random;
 import java.util.Map;
 import java.util.LinkedHashMap;
 import java.nio.charset.Charset;
+import org.json.*;
 
 class WebServer {
   public static void main(String args[]) {
@@ -198,21 +199,33 @@ class WebServer {
           // wrong data is given this just crashes
 
           Map<String, String> query_pairs = new LinkedHashMap<String, String>();
-          // extract path parameters
-          query_pairs = splitQuery(request.replace("multiply?", ""));
 
-          // extract required fields from parameters
-          Integer num1 = Integer.parseInt(query_pairs.get("num1"));
-          Integer num2 = Integer.parseInt(query_pairs.get("num2"));
+          try {
+              
+              // extract path parameters
+              query_pairs = splitQuery(request.replace("multiply?", ""));
 
-          // do math
-          Integer result = num1 * num2;
+              // extract required fields from parameters
+              Integer num1 = Integer.parseInt(query_pairs.get("num1"));
+              Integer num2 = Integer.parseInt(query_pairs.get("num2"));
+              
+              // do math
+              Integer result = num1 * num2;
 
-          // Generate response
-          builder.append("HTTP/1.1 200 OK\n");
-          builder.append("Content-Type: text/html; charset=utf-8\n");
-          builder.append("\n");
-          builder.append("Result is: " + result);
+              // Generate response
+              builder.append("HTTP/1.1 400 Bad Request\n");
+              builder.append("Content-Type: text/html; charset=utf-8\n");
+              builder.append("\n");
+              builder.append("Result is: " + result);
+          } catch (Exception e) {
+              
+              // Generate response
+              builder.append("HTTP/1.1 200 OK\n");
+              builder.append("Content-Type: text/html; charset=utf-8\n");
+              builder.append("\n");
+              builder.append("Result is not obtainable. Please enter two integers as num1 and num2");
+          }
+
 
           // TODO: Include error handling here with a correct error code and
           // a response that makes sense
@@ -238,6 +251,21 @@ class WebServer {
           // amehlhase, 46384989 -> memoranda
           // amehlhase, 46384989 -> ser316examples
           // amehlhase, 46384989 -> test316
+          
+          JSONArray repoArr = new JSONArray(json);
+          
+          // Generate response
+          builder.append("HTTP/1.1 200 OK\n");
+          builder.append("Content-Type: text/html; charset=utf-8\n");
+          builder.append("\n");
+          
+          for (int i = 0; i < repoArr.length(); i++) {
+              
+              JSONObject repo = repoArr.getJSONObject(i);
+              JSONObject owner = repo.getJSONObject("owner");
+              
+              builder.append(owner.getString("login") + ", " + owner.getString("id") + " -> " + repo.getString("name"));
+          }
 
         } else {
           // if the request is not recognized at all
